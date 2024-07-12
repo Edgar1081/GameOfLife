@@ -1,4 +1,4 @@
-module Functions where
+module IO where
 import Text.Read
 
 clean_screen :: IO ()
@@ -23,10 +23,18 @@ get_positions = do
   line <- getLine
   case line of
     "" -> return []
-    otherwise ->
+    _ ->
       let headp = string_to_tuple line in
         case headp of
           Just t -> do
             xs <- get_positions
             return (t:xs)
           Nothing -> get_positions
+
+draw_at :: (Int, Int) -> String -> IO ()
+draw_at p s = do
+    goto p
+    putStr s
+
+goto :: (Int, Int) -> IO ()
+goto (x,y) = putStr ("\ESC[" ++ show y ++ ";" ++ show x ++ "H")
