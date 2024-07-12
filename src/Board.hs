@@ -10,24 +10,30 @@ data Board = Board
   }
 
 neighc :: Position -> [Position]
-neighc p =
-    let x = fst p in
-        let y = snd p in
-            [ (xv, y-1) | xv <- [x-1, x, x+1] ] ++
-            [ (xv, y) | xv <- [x-1, x+1] ] ++
-            [ (xv, y+1) | xv <- [x-1, x, x+1]]
+neighc (x,y) = [(x-1,y-1),(x,y-1),(x+1,y-1),
+               (x-1,y), (x+1, y),
+               (x-1,y+1),(x,y+1),(x+1,y+1)]
+
+birth :: Board -> Position -> Bool
+birth b p = (isDead b p) && ((livingneigh b p) == 3)
+
+remdups :: Eq a => [a] -> [a]
+remdups [] = []
+remdups (x:xs) = x : remdups (filter (/= x) xs)
 
 class Game a where
-  isAlive :: a -> Position -> Bool
   next_gen :: a -> a
+  isAlive :: a -> Position -> Bool
   neighood :: a -> Position -> [Position]
+  livingneigh :: a -> Position -> Int
+  livingneigh a = length . neighood a
   survivors :: a -> [Position]
   births :: a -> [Position]
   isDead :: a -> Position -> Bool
   isDead a = not . isAlive a
 
-instance Game Board where
 
+instance Game Board where
   isAlive b p = (elem p) $ cells b
 
   neighood b p = fmap
@@ -36,7 +42,8 @@ instance Game Board where
 
   survivors b = [ p | p <- cells b, let l = (length $ neighood b p) in l == 2 || l == 3]
 
-  next_gen b = b {cells = survivors b ++
-                  [(x,y) | x <- [0.. (width b) -1]
-                    ,y <- [0 .. (height b) -1]
-                    , isAlive b (x,y)]}
+  births b = filter (birth b)
+    (remdups (foldl (++) [ls | cell <- cells b ,ls <- neighood b cell] []))
+
+
+  next_gen b = b {cells = survivors b ++ births b}
