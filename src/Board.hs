@@ -9,6 +9,7 @@ data Board = Board
   ,height :: Int
   }
 
+{-Returns raw neighborhood values given a Position-}
 neighc :: Position -> [Position]
 neighc (x,y) = [(x-1,y-1),(x,y-1),(x+1,y-1),
                (x-1,y), (x+1, y),
@@ -37,7 +38,7 @@ instance Game Board where
   isAlive b p = (elem p) $ cells b
 
   neighood b p = fmap
-    (\t -> ((fst t) - 1 `mod` height b +1, (snd t) -1 `mod` width b)) $
+    (\t -> ( fst t `mod` width b, snd t `mod` height b)) $
     neighc p
 
   survivors b = [ p | p <- cells b, let l = (length $ neighood b p) in l == 2 || l == 3]

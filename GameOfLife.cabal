@@ -54,7 +54,7 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
-library
+library game-lib
     -- Import common warning flags.
     import:           warnings
 
@@ -92,7 +92,7 @@ executable GameOfLife
     -- Other library packages from which modules are imported.
     build-depends:
         base ^>=4.17.2.1,
-        GameOfLife
+        game-lib
 
     -- Directories containing source files.
     hs-source-dirs:   app
@@ -125,4 +125,5 @@ test-suite GameOfLife-test
     -- Test dependencies.
     build-depends:
         base ^>=4.17.2.1,
-        GameOfLife
+        HUnit ^>=1.6,
+        game-lib
