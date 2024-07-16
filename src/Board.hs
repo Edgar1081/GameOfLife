@@ -29,7 +29,7 @@ class Game a where
   isAlive :: a -> Position -> Bool
   neighood :: a -> Position -> [Position]
   livingneigh :: a -> Position -> Int
-  livingneigh a = length . neighood a
+  livingneigh a = length . filter (\v -> isAlive a v) . neighood a
   survivors :: a -> [Position]
   births :: a -> [Position]
   isDead :: a -> Position -> Bool
