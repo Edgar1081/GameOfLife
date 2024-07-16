@@ -59,6 +59,7 @@ wrapped_list3 = [(98,98),(99,98),(0,98)
                ,(98,99),(0,99)
                ,(98,0),(99,0),(0,0)]
 
+corners :: [Position]
 corners = [edge_point0, edge_point1, edge_point2, edge_point3]
 -- x :: Int
 -- x = fst point
@@ -132,14 +133,25 @@ test_wrapl = TestList [TestLabel "Superior left corner" test_wrapl0
                      ,TestLabel "Inferior right corner" test_wrapl3]
 
 test_is_alive :: Test
-test_is_alive = TestCase $ assertBool "Should be alive" $ and $ fmap (isAlive test_board) corners
+test_is_alive = TestCase $
+  assertBool "Should be alive" $
+  and $ fmap (isAlive test_board) corners
 
+test_is_dead :: Test
+test_is_dead = TestCase $
+  assertBool "Should be deads" $
+  not $ and $ fmap (isAlive test_board) [(1,0), (1,99), (99,98)]
+
+test_survivors :: Test
+test_survivors = TestCase $
+  assertEqual "Remaining cells" corners (survivors test_board)
 
 tests :: Test
 tests = TestList [TestLabel "First Tests" test_raw_neigh
                  ,TestLabel "Wrap neighborhood" test_wrapl
-                 ,TestLabel "Alives" test_is_alive]
-
+                 ,TestLabel "Alives" test_is_alive
+                 ,TestLabel "Deads" test_is_dead
+                 ,TestLabel "Survivors" test_survivors]
 
 
 main :: IO ()

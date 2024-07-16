@@ -15,9 +15,11 @@ neighc (x,y) = [(x-1,y-1),(x,y-1),(x+1,y-1),
                (x-1,y), (x+1, y),
                (x-1,y+1),(x,y+1),(x+1,y+1)]
 
+{-Decide if a Position is validate to birth-}
 birth :: Board -> Position -> Bool
 birth b p = (isDead b p) && ((livingneigh b p) == 3)
 
+{-Remove duplicates values in lists-}
 remdups :: Eq a => [a] -> [a]
 remdups [] = []
 remdups (x:xs) = x : remdups (filter (/= x) xs)
@@ -41,7 +43,9 @@ instance Game Board where
     (\t -> ( fst t `mod` width b, snd t `mod` height b)) $
     neighc p
 
-  survivors b = [ p | p <- cells b, let l = (length $ neighood b p) in l == 2 || l == 3]
+  survivors b = [ p | p <- cells b,
+                  let l = (length $ filter (isAlive b) $ neighood b p) in
+                    l == 2 || l == 3]
 
   births b = filter (birth b)
     (remdups (foldl (++) [ls | cell <- cells b ,ls <- neighood b cell] []))
