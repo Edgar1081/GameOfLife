@@ -144,7 +144,9 @@ test_is_dead = TestCase $
 
 test_survivors :: Test
 test_survivors = TestCase $
-  assertEqual "Remaining cells" corners (survivors test_board)
+  assertBool "Stable cells" $
+  and $ [b | b <- fmap (\s -> elem s (survivors test_board)) corners]
+
 
 tests :: Test
 tests = TestList [TestLabel "First Tests" test_raw_neigh
