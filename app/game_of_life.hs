@@ -8,7 +8,6 @@ showcells b = sequence_ [IO.draw_at p "X" | p <- Board.cells b ]
 
 main :: IO ()
 main = do
-  putStrLn "Hello, Haskell!"
   IO.clean_screen
   w <- IO.get_board_data "Type a valid width : "
   h <- IO.get_board_data "Type a valid height: "
@@ -24,5 +23,5 @@ life :: Board.Board -> IO ()
 life b = do
   IO.clean_screen
   showcells b
-  wait 500000
+  wait 500000000
   life (Board.next_gen b)
