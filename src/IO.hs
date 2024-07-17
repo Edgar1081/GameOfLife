@@ -2,7 +2,7 @@ module IO where
 import Text.Read
 
 clean_screen :: IO ()
-clean_screen = putStrLn "\ESC[2J"
+clean_screen = putStr "\ESC[2J"
 
 get_board_data :: String -> IO Int
 get_board_data m = do
